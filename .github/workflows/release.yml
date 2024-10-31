@@ -1,0 +1,69 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          
+      # Build production version
+      - name: Build Production
+        run: |
+          cd web
+          npm install
+          npm run build
+          cd ..
+          
+      # Create production zip
+      - name: Create Production ZIP
+        run: |
+          mkdir -p dist/production/b2-sleekprogress
+          cp -r fxmanifest.lua client shared web/build dist/production/b2-sleekprogress/
+          cd dist/production
+          zip -r ../b2-sleekprogress-prod.zip b2-sleekprogress
+          cd ../..
+          
+      # Create development zip
+      - name: Create Development ZIP
+        run: |
+          mkdir -p dist/development/b2-sleekprogress
+          cp -r * dist/development/b2-sleekprogress/
+          rm -rf dist/development/b2-sleekprogress/dist
+          cd dist/development
+          zip -r ../b2-sleekprogress-dev.zip b2-sleekprogress
+          cd ../..
+          
+      # Create Release
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/b2-sleekprogress-prod.zip
+            dist/b2-sleekprogress-dev.zip
+          draft: false
+          prerelease: false
+          body: |
+            ## B2 Sleek Progress ${{ github.ref_name }}
+            
+            ### Production Build
+            - Plug and play version
+            - Pre-built UI
+            - Ready for production use
+            
+            ### Development Build
+            - Complete source code
+            - Requires npm install and build
+            - Includes all development files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
