@@ -27,20 +27,22 @@ jobs:
       # Create production zip
       - name: Create Production ZIP
         run: |
-          mkdir -p dist/production/b2-sleekprogress
-          cp -r fxmanifest.lua client shared web/build dist/production/b2-sleekprogress/
-          cd dist/production
-          zip -r ../b2-sleekprogress-prod.zip b2-sleekprogress
+          mkdir -p release/prod
+          cp -r fxmanifest.lua client shared web/build release/prod/
+          cd release/prod
+          zip -r ../../b2-sleekprogress-prod.zip ./*
           cd ../..
           
       # Create development zip
       - name: Create Development ZIP
         run: |
-          mkdir -p dist/development/b2-sleekprogress
-          cp -r * dist/development/b2-sleekprogress/
-          rm -rf dist/development/b2-sleekprogress/dist
-          cd dist/development
-          zip -r ../b2-sleekprogress-dev.zip b2-sleekprogress
+          mkdir -p release/dev
+          cp -r . release/dev/
+          rm -rf release/dev/release
+          rm -rf release/dev/node_modules
+          rm -rf release/dev/web/node_modules
+          cd release/dev
+          zip -r ../../b2-sleekprogress-dev.zip ./*
           cd ../..
           
       # Create Release
@@ -49,8 +51,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/b2-sleekprogress-prod.zip
-            dist/b2-sleekprogress-dev.zip
+            b2-sleekprogress-prod.zip
+            b2-sleekprogress-dev.zip
           draft: false
           prerelease: false
           body: |
