@@ -18,6 +18,17 @@ A highly customizable progress system for FiveM featuring multiple visual styles
 - Event handling with callbacks
 - Cancellable actions
 
+## Progress Types
+
+### Circular Progress
+![Circular Progress Demo](./demos/circular.gif)
+
+### Linear Progress
+![Linear Progress Demo](./demos/linear.gif)
+
+### Minimal Progress
+![Minimal Progress Demo](./demos/minimal.gif)
+
 ## Installation
 
 ### Production Build
